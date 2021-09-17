@@ -1,9 +1,7 @@
 ﻿using FullStack.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Text;
+
 
 namespace FullStack.Data
 {

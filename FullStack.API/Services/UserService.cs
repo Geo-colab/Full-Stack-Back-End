@@ -1,13 +1,6 @@
-﻿using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using FullStack.API.Helpers;
-using FullStack.ViewModels;
 using FullStack.Data.Entities;
 using FullStack.Data;
 
@@ -43,10 +36,14 @@ namespace FullStack.API.Services
                 if (user == null)
                     return null;
 
-           
+               var userPassword = _context.Users.SingleOrDefault(x => x.Password == password);
 
-                // authentication successful
-                return user;
+               //check if password exists
+               if (userPassword == null)
+                    return null;
+
+            // authentication successful
+            return user;
             }
 
             public IEnumerable<User> GetAll()
