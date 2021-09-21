@@ -12,7 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
+
 
 namespace FullStack.API
 {
@@ -31,14 +31,10 @@ namespace FullStack.API
         public void ConfigureServices(IServiceCollection services)
         {
             // use sql server db in production and sqlite db in development
-            if (_env.IsProduction())
-                services.AddDbContext<FullStackDbContext>();
-            else
-                services.AddDbContext<FullStackDbContext>();
-
+            services.AddDbContext<FullStackDbContext>();
             services.AddCors();
             services.AddControllers();
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
             // configure strongly typed settings objects
             var appSettingsSection = _configuration.GetSection("AppSettings");
@@ -80,8 +76,9 @@ namespace FullStack.API
                 };
             });
 
-            // configure DI for application services
+            // configure DI for application services and repositories
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IFullStackRepository, FullStackRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

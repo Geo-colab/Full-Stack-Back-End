@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using FullStack.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace FullStack.Data
 {
@@ -15,57 +16,58 @@ namespace FullStack.Data
         //Do the same for all the other entities, Invoices, Invoice Items, etc
 
     }
-    public class FullStackRepository: IFullStackRepository
+    public class FullStackRepository : IFullStackRepository
     {
-        private FullStackDbContext _ctx;
-        public FullStackRepository(FullStackDbContext ctx)
+        private FullStackDbContext _context;
+        public FullStackRepository(FullStackDbContext context)
         {
-            _ctx = ctx;
+            _context = context;
         }
+
 
         public List<User> GetUsers()
         {
-            throw new NotImplementedException();
-            //return _ctx.Users.ToList();
+
+            return _context.Users.ToList();
         }
 
         public User GetUser(int id)
         {
-            throw new NotImplementedException();
-            //return _ctx.Users.Find(id);
+
+            return _context.Users.Find(id);
         }
 
         public User CreateUser(User user)
         {
-            throw new NotImplementedException();
 
-            //_ctx.Users.Add(e);
-            //_ctx.SaveChanges();
-            //return e;
+            _context.Users.Add(user);
+            _context.SaveChanges();
+            return user;
         }
 
         public User UpdateUser(User user)
         {
-            throw new NotImplementedException();
 
-            //var existing = _ctx.Users.SingleOrDefault(em => em.Id == e.Id);
-            //if (existing == null) return null;
+            var existing = _context.Users.SingleOrDefault(em => em.Id == user.Id);
+            if (existing == null) return null;
 
-            //_ctx.Entry(existing).State = EntityState.Detached;
-            //_ctx.Users.Attach(e);
-            //_ctx.Entry(e).State = EntityState.Modified;
-            //_ctx.SaveChanges();
+            _context.Entry(existing).State = EntityState.Detached;
+            _context.Users.Attach(user);
+            _context.Entry(user).State = EntityState.Modified;
+            _context.SaveChanges();
+            return user;
         }
 
         public void DeleteUser(int id)
         {
-            throw new NotImplementedException();
-
-            //var entity = _ctx.Users.Find(noteId);
-            //_ctx.Users.Remove(entity); //CAREFULL!! here when you copy and paste, change _ctx.Users to the new DBSet
-            //_ctx.SaveChanges();
+            var entity = _context.Users.Find(id);
+            _context.Users.Remove(entity);
+            _context.SaveChanges();
         }
 
-        
+
+
     }
+
 }
+

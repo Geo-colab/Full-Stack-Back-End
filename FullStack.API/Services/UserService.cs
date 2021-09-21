@@ -3,79 +3,80 @@ using System.Linq;
 using FullStack.API.Helpers;
 using FullStack.Data.Entities;
 using FullStack.Data;
+using FullStack.ViewModels;
+using Microsoft.Extensions.Options;
 
 namespace FullStack.API.Services
 {
     public interface IUserService
     {
-            User Authenticate(string username, string password);
-            IEnumerable<User> GetAll();
-            User GetById(int id);
-            User Create(User user, string password);
-            void Update(User user, string password = null);
+            UserModel Authenticate(string username, string password);
+            IEnumerable<UserModel> GetAll();
+            UserModel GetById(int id);
+            UserModel Create(RegisterModel user, string password);
+            void Update(UpdateModel user, string password = null);
             void Delete(int id);
         }
 
         public class UserService : IUserService
         {
-            private FullStackDbContext _context;
+            private IFullStackRepository _repo;
 
-            public UserService(FullStackDbContext context)
+        public UserService(IFullStackRepository repo)
             {
-                _context = context;
-            }
+                _repo = repo;
+        }
 
-            public User Authenticate(string username, string password)
+            public UserModel Authenticate(string username, string password)
             {
                 if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                     return null;
 
-                var user = _context.Users.SingleOrDefault(x => x.Username == username);
+            var user = _repo.GetUsers().SingleOrDefault(x => x.Username == username && x.Password == password);
 
-                // check if username exists
-                if (user == null)
-                    return null;
+            // return null if user not found
+            if (user == null) return null;
 
-               var userPassword = _context.Users.SingleOrDefault(x => x.Password == password);
-
-               //check if password exists
-               if (userPassword == null)
-                    return null;
+            //map from DB entity to UserModel for the front-end
+            var userModel = MapUserModel(user);
 
             // authentication successful
-            return user;
+            return userModel;
             }
 
-            public IEnumerable<User> GetAll()
+            public IEnumerable<UserModel> GetAll()
             {
-                return _context.Users;
+            var userList = _repo.GetUsers();
+            return userList.Select(u => MapUserModel(u));
             }
 
-            public User GetById(int id)
+            public UserModel GetById(int id)
             {
-                return _context.Users.Find(id);
-            }
+            var userEntity = _repo.GetUser(id);
+            if (userEntity == null) return null;
 
-            public User Create(User user, string password)
+            return MapUserModel(userEntity);
+        }
+
+            public UserModel Create(RegisterModel user, string password)
             {
                 // validation
                 if (string.IsNullOrWhiteSpace(password))
                     throw new AppException("Password is required");
 
-                if (_context.Users.Any(x => x.Username == user.Username))
+                if (_repo.GetUsers().Any(x => x.Username == user.Username))
                     throw new AppException("Username \"" + user.Username + "\" is already taken");
 
                 user.Password = password;
+               
+                var userEntity = _repo.CreateUser(MapRegisterModelToUser(user)); 
 
-                _context.Users.Add(user);
-                _context.SaveChanges();
-
-                return user;
+                return MapUserModel(userEntity);
             }
 
-            public void Update(User userParam, string password = null)
+            public void Update(UpdateModel userParam, string password = null)
             {
-                var user = _context.Users.Find(userParam.Id);
+                var user = _repo.GetUsers().Find(x => x.Username == userParam.Username);
 
                 if (user == null)
                     throw new AppException("User not found");
@@ -84,7 +85,7 @@ namespace FullStack.API.Services
                 if (!string.IsNullOrWhiteSpace(userParam.Username) && userParam.Username != user.Username)
                 {
                     // throw error if the new username is already taken
-                    if (_context.Users.Any(x => x.Username == userParam.Username))
+                    if (_repo.GetUsers().Any(x => x.Username == userParam.Username))
                         throw new AppException("Username " + userParam.Username + " is already taken");
 
                     user.Username = userParam.Username;
@@ -103,22 +104,64 @@ namespace FullStack.API.Services
                     user.Password = password;
                 }
 
-                _context.Users.Update(user);
-                _context.SaveChanges();
+                _repo.UpdateUser(user);
+                
             }
 
             public void Delete(int id)
             {
-                var user = _context.Users.Find(id);
-                if (user != null)
-                {
-                    _context.Users.Remove(user);
-                    _context.SaveChanges();
-                }
+                _repo.DeleteUser(id);
+
             }
 
-            // private helper methods
-
-           
+        // Map Methods
+        public UserModel MapUserModel(User user)
+        {
+            return new UserModel
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Username = user.Username,
+                Role = user.Role
+            };
         }
+
+        public User MapUserModel(UserModel userModel)
+        {
+            return new User
+            {
+                Id = userModel.Id,
+                FirstName = userModel.FirstName,
+                LastName = userModel.LastName,
+                Username = userModel.Username,
+                Role = userModel.Role
+            };
+        }
+
+        public RegisterModel MapRegisterModelToUser(User user)
+        {
+            return new RegisterModel
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Username = user.Username,
+                Password = user.Password,
+                Role = user.Role
+            };
+        }
+
+        public User MapRegisterModelToUser(RegisterModel registerModel)
+        {
+            return new User
+            {
+                FirstName = registerModel.FirstName,
+                LastName = registerModel.LastName,
+                Username = registerModel.Username,
+                Password = registerModel.Password,
+                Role = registerModel.Role
+            };
+        }
+
+    }
 }
