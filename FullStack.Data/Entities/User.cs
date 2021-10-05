@@ -1,5 +1,7 @@
 ﻿
 
+using System.Collections.Generic;
+
 namespace FullStack.Data.Entities
 {
     public class User
@@ -10,6 +12,11 @@ namespace FullStack.Data.Entities
         public string Username { get; set; }
         public string Password { get; set; }
         public string Role { get; set; }
+
+        //User advert list
+        public List<Advert> Adverts { get; set; }
+
+  
                   
     }
 }

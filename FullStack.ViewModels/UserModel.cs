@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace FullStack.ViewModels
 {
     public class UserModel
@@ -8,6 +10,9 @@ namespace FullStack.ViewModels
         public string LastName { get; set; }
         public string Username { get; set; }
         public string Role { get; set; }
+
+        public List<AdvertModel> Adverts {get; set;}
+       
 
     }
 }

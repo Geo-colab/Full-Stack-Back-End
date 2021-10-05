@@ -23,7 +23,8 @@ namespace FullStack.API.Controllers
 
         public UsersController(
             IUserService userService,
-            IOptions<AppSettings> appSettings)
+            IOptions<AppSettings> appSettings
+          )
         {
             _userService = userService;
             _appSettings = appSettings.Value;
@@ -52,7 +53,6 @@ namespace FullStack.API.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            //Ek het probeer om a autherizedUserModel te create maar al die token code is op die contoller hier so hy wil nie die token map in die UserService nie.
             // return basic user info and authentication token
             return Ok(new
             {
@@ -61,7 +61,8 @@ namespace FullStack.API.Controllers
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Role = user.Role,
-                Token = tokenString
+                Token = tokenString,
+                Adverts = user.Adverts
             });
         }
 
@@ -104,9 +105,23 @@ namespace FullStack.API.Controllers
             {
                 // return error message if there was an exception
                 return BadRequest(new { message = ex.Message });
+            }  
+        }
+
+        [HttpPost("create")]
+        public IActionResult CreateUser([FromBody] RegisterModel model)
+        {
+            try
+            {
+                // create user
+                var createdUserModel = _userService.CreateUser(model, model.Password);
+                return Ok();
             }
-            
-            
+            catch (AppException ex)
+            {
+                // return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpGet]
@@ -145,5 +160,6 @@ namespace FullStack.API.Controllers
             _userService.Delete(id);
             return Ok();
         }
+
     }
 }

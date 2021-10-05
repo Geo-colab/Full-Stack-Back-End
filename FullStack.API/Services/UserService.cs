@@ -14,6 +14,7 @@ namespace FullStack.API.Services
             IEnumerable<UserModel> GetAll();
             UserModel GetById(int id);
             UserModel Create(RegisterModel user, string password);
+            UserModel CreateUser(RegisterModel user, string password);
             void Update(UpdateModel user, string password = null);
             void Delete(int id);
         }
@@ -74,7 +75,23 @@ namespace FullStack.API.Services
                 return MapUserModel(userEntity);
             }
 
-            public void Update(UpdateModel userParam, string password = null)
+        public UserModel CreateUser(RegisterModel user, string password)
+        {
+
+            if (string.IsNullOrWhiteSpace(password))
+                throw new AppException("Password is required");
+
+            if (_repo.GetUsers().Any(x => x.Username == user.Username))
+                throw new AppException("Username \"" + user.Username + "\" is already taken");
+
+            user.Password = password;
+
+            var userEntity = _repo.CreateUser(MapRegisterModelToUser(user));
+
+            return MapUserModel(userEntity);
+        }
+
+        public void Update(UpdateModel userParam, string password = null)
             {
                 var user = _repo.GetUsers().Find(x => x.Username == userParam.Username);
 
@@ -123,7 +140,7 @@ namespace FullStack.API.Services
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Username = user.Username,
-                Role = user.Role
+                Role = user.Role,
             };
         }
 
@@ -135,7 +152,7 @@ namespace FullStack.API.Services
                 FirstName = userModel.FirstName,
                 LastName = userModel.LastName,
                 Username = userModel.Username,
-                Role = userModel.Role
+                Role = userModel.Role,
             };
         }
 

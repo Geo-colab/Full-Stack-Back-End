@@ -34,6 +34,7 @@ namespace FullStack.API
             services.AddDbContext<FullStackDbContext>();
             services.AddCors();
             services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
 
 
             // configure strongly typed settings objects
@@ -78,14 +79,13 @@ namespace FullStack.API
 
             // configure DI for application services and repositories
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IFullStackRepository, FullStackRepository>();
+            services.AddScoped<IAdvertService, AdvertService>();
+            services.AddScoped<IFullStackRepository, FullStackRepository>();     
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, FullStackDbContext dataContext)
         {
-            // migrate any database changes on startup (includes initial db creation)
-            dataContext.Database.Migrate();
 
             app.UseRouting();
 
