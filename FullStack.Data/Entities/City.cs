@@ -11,5 +11,6 @@ namespace FullStack.Data.Entities
         
         //Province foreign key
         public int ProvinceId { get; set; }
+        public Province Province { get; set; }
     }
 }

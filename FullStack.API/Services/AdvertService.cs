@@ -18,6 +18,7 @@ namespace FullStack.API.Services
         void Update(AdvertModel userParam);
 
         IEnumerable<ProvinceModel> GetAllProvinces();
+        IEnumerable<CityModel> GetCitiesByProvinceId(int id);
 
     }
     public class AdvertService : IAdvertService
@@ -53,6 +54,12 @@ namespace FullStack.API.Services
         {
             var provinceList = _repo.GetProvinces();
             return provinceList.Select(u => MapProvinceModel(u));
+        }
+
+        public IEnumerable<CityModel> GetCitiesByProvinceId(int id)
+        {
+            var cityList = _repo.GetCitiesByProvinceId(id);
+            return cityList.Select(u => MapCityModel(u));
         }
 
         public CreateAdvertModel CreateAdvert(CreateAdvertModel advert)
@@ -105,6 +112,12 @@ namespace FullStack.API.Services
 
         public AdvertModel MapAdvertModel(Advert advert)
         {
+            var provinceEntity = _repo.GetProvinceById(advert.ProvinceId);
+            var provinceModel = MapProvinceModel(provinceEntity);
+
+            var cityEntity = _repo.GetCityById(advert.CityId);
+            var cityModel = MapCityModel(cityEntity);
+
             return new AdvertModel
             {
                 Id = advert.Id,
@@ -114,7 +127,9 @@ namespace FullStack.API.Services
                 AdvertState = advert.AdvertState,
                 ProvinceId = advert.ProvinceId,
                 CityId = advert.CityId,
-                UserId = advert.UserId
+                UserId = advert.UserId,
+                Province = provinceModel,
+                City = cityModel
 
             };
         }
@@ -124,14 +139,20 @@ namespace FullStack.API.Services
         {
             return new ProvinceModel
             {
-                Id = province.Id,
-                Name = province.Name,
-                Cities = province.Cities.Select(x => new CityModel()
-                {
-                    Id = x.Id,
-                    Name = x.Name
-                })
-                    .ToList()
+
+            Id = province.Id,
+            Name = province.Name,
+
+            };
+        }
+
+        public CityModel MapCityModel(City city)
+        {
+            return new CityModel
+            {
+                Id = city.Id,
+                Name = city.Name,
+                ProvinceId = city.ProvinceId
             };
         }
 

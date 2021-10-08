@@ -23,6 +23,9 @@ namespace FullStack.Data
 
         //Province Methods
         List<Province> GetProvinces();
+        Province GetProvinceById(int id);
+        City GetCityById(int id);
+        List<City> GetCitiesByProvinceId(int id);
     }
     public class FullStackRepository : IFullStackRepository
     {
@@ -128,6 +131,27 @@ namespace FullStack.Data
         {
 
             return _context.Provinces.Include(x => x.Cities).ToList();
+        }
+
+        public List<City> GetCitiesByProvinceId(int id)
+        {
+
+            List<City> cities = _context.Cities
+                 .Include(u => u.Province)
+                 .Where(u => u.ProvinceId == id)
+                 .ToList();
+
+            return cities;
+        }
+
+        public Province GetProvinceById(int id)
+        {
+            return _context.Provinces.Find(id);
+        }
+
+        public City GetCityById(int id)
+        {
+            return _context.Cities.Find(id);
         }
 
     }

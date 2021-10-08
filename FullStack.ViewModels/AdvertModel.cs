@@ -14,5 +14,7 @@ namespace FullStack.ViewModels
         public int ProvinceId { get; set; }
         public int CityId { get; set; }
         public int UserId { get; set; }
+        public ProvinceModel Province { get; set; }
+        public CityModel City { get; set; }
     }
 }

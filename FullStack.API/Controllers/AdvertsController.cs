@@ -2,11 +2,6 @@
 using FullStack.API.Services;
 using FullStack.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FullStack.API.Controllers
 {   
@@ -48,8 +43,15 @@ namespace FullStack.API.Controllers
         [HttpGet("provinces")]
         public IActionResult GetAllProvinces()
         {
-            var adverts = _advertService.GetAllProvinces();
-            return Ok(adverts);
+            var provinces = _advertService.GetAllProvinces();
+            return Ok(provinces);
+        }
+
+        [HttpGet("provinces/cities/{id}")]
+        public IActionResult GetCitiesByProvinceId(int id)
+        {
+            var cities = _advertService.GetCitiesByProvinceId(id);
+            return Ok(cities);
         }
 
         [HttpPut("{id}")]
