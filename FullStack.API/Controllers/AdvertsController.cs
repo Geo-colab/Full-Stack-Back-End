@@ -20,9 +20,9 @@ namespace FullStack.API.Controllers
         }
         
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAllAdverts()
         {
-            var adverts = _advertService.GetAll();
+            var adverts = _advertService.GetAllAdverts();
             return Ok(adverts);
         }
 
