@@ -154,6 +154,23 @@ namespace FullStack.API.Controllers
             }
         }
 
+
+        [HttpPut("sellers/update/{id}")]
+        public IActionResult Update(int id, SellerModel model)
+        {
+            try
+            {
+                // update user 
+                _userService.UpdateSeller(model);
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                // return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

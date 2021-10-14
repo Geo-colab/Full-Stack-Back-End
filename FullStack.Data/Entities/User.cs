@@ -15,6 +15,9 @@ namespace FullStack.Data.Entities
 
         //User advert list
         public List<Advert> Adverts { get; set; }
+        
+        //USer seller
+        public Seller Seller { get; set; }
 
   
                   

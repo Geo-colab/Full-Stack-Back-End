@@ -22,10 +22,10 @@ namespace FullStack.Data
         }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<Advert> Adverts { get; set;}
+        public DbSet<Advert> Adverts { get; set; }
         public DbSet<Province> Provinces { get; set; }
-        public DbSet<City>Cities { get; set; }
-       
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Seller> Seller{ get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -13,6 +13,10 @@ namespace FullStack.Data
         User UpdateUser(User user);
         void DeleteUser(int id);
 
+        //Seller methods
+        public List<Seller> GetSellers();
+        public Seller UpdateSeller(Seller seller);
+
         //Advert methods
         List<Advert> GetAdverts();
         Advert GetAdvert(int id);
@@ -79,6 +83,26 @@ namespace FullStack.Data
             var entity = _context.Users.Find(id);
             _context.Users.Remove(entity);
             _context.SaveChanges();
+        }
+
+        public List<Seller> GetSellers()
+        {
+
+            return _context.Seller.ToList();
+        }
+
+
+        public Seller UpdateSeller(Seller seller)
+        {
+
+            var existing = _context.Adverts.SingleOrDefault(em => em.Id == seller.Id);
+            if (existing == null) return null;
+
+            _context.Entry(existing).State = EntityState.Detached;
+            _context.Seller.Attach(seller);
+            _context.Entry(seller).State = EntityState.Modified;
+            _context.SaveChanges();
+            return seller;
         }
 
         //Advert methods

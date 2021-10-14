@@ -17,6 +17,9 @@ namespace FullStack.API.Services
             UserModel CreateUser(RegisterModel user, string password);
             void Update(UpdateModel user, string password = null);
             void Delete(int id);
+
+        //seller methods
+        void UpdateSeller(SellerModel userParam);
         }
 
         public class UserService : IUserService
@@ -108,28 +111,58 @@ namespace FullStack.API.Services
                     user.Username = userParam.Username;
                 }
 
-                // update user properties if provided
-                if (!string.IsNullOrWhiteSpace(userParam.FirstName))
+            
+            // update password if provided
+            if (!string.IsNullOrWhiteSpace(password))
+            {
+                if (user.Password != password)
+                    throw new AppException("Old password does not correspond with password in database");
+                
+                user.Password = userParam.NewPassword;
+            }
+
+            // update user properties if provided
+            if (!string.IsNullOrWhiteSpace(userParam.FirstName))
                     user.FirstName = userParam.FirstName;
 
                 if (!string.IsNullOrWhiteSpace(userParam.LastName))
                     user.LastName = userParam.LastName;
 
-                // update password if provided
-                if (!string.IsNullOrWhiteSpace(password))
-                {
-                    user.Password = password;
-                }
+               
 
                 _repo.UpdateUser(user);
                 
             }
 
-            public void Delete(int id)
+        public void Delete(int id)
             {
                 _repo.DeleteUser(id);
 
             }
+
+        //Seller methods
+
+       
+
+        public void UpdateSeller(SellerModel userParam)
+        {
+            var seller = _repo.GetSellers().Find(x => x.Id == userParam.Id);
+
+            if (seller == null)
+                throw new AppException("Advert Not Found");
+
+            seller.Id = userParam.Id;
+
+            if (!string.IsNullOrWhiteSpace(userParam.Email))
+                seller.Email = userParam.Email;
+
+            if (!string.IsNullOrWhiteSpace(userParam.Phone))
+                seller.Phone = userParam.Phone;
+
+            seller.UserId = userParam.UserId;
+
+            _repo.UpdateSeller(seller);
+        }
 
         // Map Methods
         public UserModel MapUserModel(User user)
@@ -179,6 +212,29 @@ namespace FullStack.API.Services
                 Role = registerModel.Role
             };
         }
+
+        public SellerModel MapSellerModelToSeller(Seller seller)
+        {
+            return new SellerModel
+            {
+                Id = seller.Id,
+                Email = seller.Email,
+                Phone = seller.Phone,
+                UserId = seller.UserId
+            };
+        }
+
+        public Seller MapSellerModelToSeller(SellerModel sellerModel)
+        {
+            return new Seller
+            {
+                Id = sellerModel.Id,
+                Email = sellerModel.Email,
+                Phone = sellerModel.Phone,
+                UserId = sellerModel.UserId
+            };
+        }
+
 
     }
 }
