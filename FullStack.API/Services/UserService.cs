@@ -18,8 +18,10 @@ namespace FullStack.API.Services
             void Update(UpdateModel user, string password = null);
             void Delete(int id);
 
-        //seller methods
-        void UpdateSeller(SellerModel userParam);
+             //seller methods
+            SellerModel GetSellerByUserId(int id);
+            SellerModel CreateSeller(SellerModel seller);
+            void UpdateSeller(SellerModel userParam);
         }
 
         public class UserService : IUserService
@@ -141,15 +143,29 @@ namespace FullStack.API.Services
             }
 
         //Seller methods
+        public SellerModel GetSellerByUserId(int id)
+        {
+            var seller = _repo.GetSellers().Find(x => x.UserId == id);
+           
+            if (seller == null) return null;
 
-       
+            return MapSellerModelToSeller(seller);
+        }
+
+        public SellerModel CreateSeller(SellerModel seller)
+        {
+
+            var sellerEntity = _repo.CreateSeller(MapSellerModelToSeller(seller));
+
+            return MapSellerModelToSeller(sellerEntity);
+        }
 
         public void UpdateSeller(SellerModel userParam)
         {
             var seller = _repo.GetSellers().Find(x => x.Id == userParam.Id);
 
             if (seller == null)
-                throw new AppException("Advert Not Found");
+                throw new AppException("Seller Not Found");
 
             seller.Id = userParam.Id;
 

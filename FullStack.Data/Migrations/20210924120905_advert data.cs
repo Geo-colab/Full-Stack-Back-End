@@ -6,10 +6,7 @@ namespace FullStack.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.InsertData(
-                table: "Adverts",
-                columns: new[] { "Id", "AdvertDetails", "AdvertHead", "AdvertState", "City", "Price", "Province", "UserId" },
-                values: new object[] { 1, "A large house with 3 bedrooms", "Palace in Verce", "Live", "Bloemfontein", 800000.00m, "Free State", 2 });
+            
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

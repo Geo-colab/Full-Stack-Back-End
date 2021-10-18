@@ -155,7 +155,38 @@ namespace FullStack.API.Controllers
         }
 
 
-        [HttpPut("sellers/update/{id}")]
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            _userService.Delete(id);
+            return Ok();
+        }
+
+        //Seller HTTP Methods
+        [HttpGet("seller/{id}")]
+        public IActionResult GetSellerByUserId(int id)
+        {
+            var seller = _userService.GetSellerByUserId(id);
+            return Ok(seller);
+        }
+
+        [HttpPost("seller/create")]
+        public IActionResult CreateSeller([FromBody] SellerModel model)
+        {
+            try
+            {
+                // create user
+                var createdSellerModel = _userService.CreateSeller(model);
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                // return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPut("seller/update/{id}")]
         public IActionResult Update(int id, SellerModel model)
         {
             try
@@ -169,13 +200,6 @@ namespace FullStack.API.Controllers
                 // return error message if there was an exception
                 return BadRequest(new { message = ex.Message });
             }
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            _userService.Delete(id);
-            return Ok();
         }
 
     }

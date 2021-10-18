@@ -7,6 +7,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20210928072533_Province&amp;City.cs" />
     <Compile Remove="Migrations\20210928072533_Province&amp;City.Designer.cs" />
+    <Compile Remove="Migrations\20211018070144_clone update.cs" />
+    <Compile Remove="Migrations\20211018070144_clone update.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

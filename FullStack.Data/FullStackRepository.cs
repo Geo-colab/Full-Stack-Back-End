@@ -7,6 +7,7 @@ namespace FullStack.Data
 {
     public interface IFullStackRepository
     {
+        //User methods
         User GetUser(int id);
         List<User> GetUsers();
         User CreateUser(User user);
@@ -14,8 +15,9 @@ namespace FullStack.Data
         void DeleteUser(int id);
 
         //Seller methods
-        public List<Seller> GetSellers();
-        public Seller UpdateSeller(Seller seller);
+        List<Seller> GetSellers();
+        Seller CreateSeller(Seller seller);
+        Seller UpdateSeller(Seller seller);
 
         //Advert methods
         List<Advert> GetAdverts();
@@ -23,7 +25,6 @@ namespace FullStack.Data
         List<Advert> GetAdvertsByUserId(int id);
         Advert CreateAdvert(Advert advert);
         Advert UpdateAdvert(Advert advert);
-
 
         //Province Methods
         List<Province> GetProvinces();
@@ -85,21 +86,29 @@ namespace FullStack.Data
             _context.SaveChanges();
         }
 
+        //Seller Methods
         public List<Seller> GetSellers()
         {
 
-            return _context.Seller.ToList();
+            return _context.Sellers.ToList();
         }
 
+        public Seller CreateSeller(Seller seller)
+        {
+
+            _context.Sellers.Add(seller);
+            _context.SaveChanges();
+            return seller;
+        }
 
         public Seller UpdateSeller(Seller seller)
         {
 
-            var existing = _context.Adverts.SingleOrDefault(em => em.Id == seller.Id);
+            var existing = _context.Sellers.SingleOrDefault(em => em.Id == seller.Id);
             if (existing == null) return null;
 
             _context.Entry(existing).State = EntityState.Detached;
-            _context.Seller.Attach(seller);
+            _context.Sellers.Attach(seller);
             _context.Entry(seller).State = EntityState.Modified;
             _context.SaveChanges();
             return seller;

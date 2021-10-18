@@ -25,7 +25,7 @@ namespace FullStack.Data
         public DbSet<Advert> Adverts { get; set; }
         public DbSet<Province> Provinces { get; set; }
         public DbSet<City> Cities { get; set; }
-        public DbSet<Seller> Seller{ get; set;}
+        public DbSet<Seller> Sellers{ get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,19 +43,7 @@ namespace FullStack.Data
                 }
            );
 
-            modelBuilder.Entity<Advert>().HasData(
-                new Advert()
-                {
-                    Id = 1,
-                   AdvertHead = "Palace in Verce",
-                   AdvertDetails = "A large house with 3 bedrooms",
-                   Price = 800000.00m,
-                   AdvertState = AdvertState.Live,
-                   UserId = 2,
-                   ProvinceId = 2,
-                   CityId = 3
-                }
-           );
+           
 
             //Populate Provinces Table
             modelBuilder.Entity<Province>().HasData(
