@@ -15,7 +15,7 @@ namespace FullStack.API.Services
             UserModel GetById(int id);
             UserModel Create(RegisterModel user, string password);
             UserModel CreateUser(RegisterModel user, string password);
-            void Update(UpdateModel user, string password = null);
+            void Update(UserUpdateModel user, string password = null);
             void Delete(int id);
 
              //seller methods
@@ -96,9 +96,9 @@ namespace FullStack.API.Services
             return MapUserModel(userEntity);
         }
 
-        public void Update(UpdateModel userParam, string password = null)
+        public void Update(UserUpdateModel userParam, string password = null)
             {
-                var user = _repo.GetUsers().Find(x => x.Username == userParam.Username);
+                var user = _repo.GetUsers().Find(x => x.Id == userParam.Id);
 
                 if (user == null)
                     throw new AppException("User not found");

@@ -1,8 +1,9 @@
 ﻿
 namespace FullStack.ViewModels
 {
-   public class UpdateModel
+   public class UserUpdateModel
     {
+        public int Id { get; set; } 
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Username { get; set; }

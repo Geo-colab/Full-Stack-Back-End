@@ -139,11 +139,12 @@ namespace FullStack.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] UpdateModel model)
+        public IActionResult Update(int id, [FromBody] UserUpdateModel model)
         {
             try
             {
                 // update user 
+                model.Id = id;
                 _userService.Update(model, model.Password);
                 return Ok();
             }
