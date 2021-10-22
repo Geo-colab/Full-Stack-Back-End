@@ -31,6 +31,12 @@ namespace FullStack.Data
         Province GetProvinceById(int id);
         City GetCityById(int id);
         List<City> GetCitiesByProvinceId(int id);
+
+        //PriceInterval Methods
+        List<PriceInterval> GetPriceIntervals();
+
+        //AdvertSearch method
+        List<Advert> SearchAdverts(AdvertSearch advertSearch);
     }
     public class FullStackRepository : IFullStackRepository
     {
@@ -185,6 +191,23 @@ namespace FullStack.Data
         public City GetCityById(int id)
         {
             return _context.Cities.Find(id);
+        }
+
+        //PriceInterval methods
+        public List<PriceInterval> GetPriceIntervals()
+        {
+            return _context.PriceIntervals.ToList();
+        }
+
+        //Method to search for adverts
+        public List<Advert> SearchAdverts(AdvertSearch advertSearch )
+        {
+            List<Advert> adverts = (from c in _context.Adverts
+                        where (c.ProvinceId == advertSearch.ProvinceId) && (c.CityId == advertSearch.CityId && advertSearch.CityId != 0)
+                        && (c.Price >= advertSearch.MinPrice && c.Price <= advertSearch.MaxPrice && advertSearch.MinPrice != 0 && advertSearch.MaxPrice != 0)
+                        && (c.AdvertHead == advertSearch.Keyword || c.AdvertDetails == advertSearch.Keyword && advertSearch.Keyword != null)
+                        select c).ToList();
+            return adverts;
         }
 
     }

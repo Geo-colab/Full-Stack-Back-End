@@ -85,6 +85,31 @@ namespace FullStack.API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        //PriceInterval HTTP Methods
+        [HttpGet("price-intervals")]
+        public IActionResult GetAllPriceIntervals()
+        {
+            var priceInterval = _advertService.GetAllPriceIntervals();
+            return Ok(priceInterval);
+        }
+
+        //AdvertSearch HTTP Methods
+        [HttpPost("search-adverts")]
+        public IActionResult SearchAdverts([FromBody] AdvertSearchModel model)
+        {
+            try
+            {
+                // 
+                var searchedAdverts = _advertService.SearchAdverts(model);
+                return Ok(searchedAdverts);
+            }
+            catch (AppException ex)
+            {
+                // return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }
 

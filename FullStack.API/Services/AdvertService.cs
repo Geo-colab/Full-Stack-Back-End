@@ -20,6 +20,12 @@ namespace FullStack.API.Services
         IEnumerable<ProvinceModel> GetAllProvinces();
         IEnumerable<CityModel> GetCitiesByProvinceId(int id);
 
+        //PriceInterval Methods
+        public IEnumerable<PriceIntervalModel> GetAllPriceIntervals();
+
+        //Search Adverts
+        IEnumerable<AdvertModel> SearchAdverts(AdvertSearchModel advertSearchModel);
+
     }
     public class AdvertService : IAdvertService
     {
@@ -95,6 +101,22 @@ namespace FullStack.API.Services
 
         }
 
+        //PriceInterval methods
+        public IEnumerable<PriceIntervalModel> GetAllPriceIntervals()
+        {
+            var priceIntervals = _repo.GetPriceIntervals();
+            return priceIntervals.Select(u => MapPriceIntervalModel(u));
+        }
+
+        //SearchAdvert methods
+        public IEnumerable<AdvertModel> SearchAdverts(AdvertSearchModel advertSearchModel)
+        {
+            var searchedAdverts = _repo.SearchAdverts(MapAdvertSearchModel(advertSearchModel));
+            return searchedAdverts.Select(u => MapAdvertModel(u));
+        }
+
+
+        //Map Methods
         public Advert MapAdvertModel(AdvertModel advertModel)
         {
             return new Advert
@@ -184,6 +206,37 @@ namespace FullStack.API.Services
             };
         }
 
+        //Map PriceInterval
+        public PriceIntervalModel MapPriceIntervalModel(PriceInterval priceInterval)
+        {
+            return new PriceIntervalModel
+            {
+                Id = priceInterval.Id,
+                PriceIntervalValue = priceInterval.PriceIntervalValue,
+                PriceIntervalDisplay = priceInterval.PriceIntervalDisplay
+            };
+        }
 
+        public PriceInterval MapPriceIntervalModel(PriceIntervalModel priceIntervalModel)
+        {
+            return new PriceInterval
+            {
+                Id = priceIntervalModel.Id,
+                PriceIntervalValue = priceIntervalModel.PriceIntervalValue,
+                PriceIntervalDisplay = priceIntervalModel.PriceIntervalDisplay
+            };
+        }
+
+        public AdvertSearch MapAdvertSearchModel(AdvertSearchModel advertSearchModel)
+        {
+            return new AdvertSearch
+            {
+               ProvinceId = advertSearchModel.ProvinceId,
+               CityId = advertSearchModel.CityId,
+               MinPrice = advertSearchModel.MinPrice,
+               MaxPrice = advertSearchModel.MaxPrice,
+               Keyword = advertSearchModel.Keyword
+            };
+        }
     }
 }
