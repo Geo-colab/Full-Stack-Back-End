@@ -203,9 +203,9 @@ namespace FullStack.Data
         public List<Advert> SearchAdverts(AdvertSearch advertSearch )
         {
             List<Advert> adverts = (from c in _context.Adverts
-                        where (c.ProvinceId == advertSearch.ProvinceId) && (c.CityId == advertSearch.CityId && advertSearch.CityId != 0)
-                        && (c.Price >= advertSearch.MinPrice && c.Price <= advertSearch.MaxPrice && advertSearch.MinPrice != 0 && advertSearch.MaxPrice != 0)
-                        && (c.AdvertHead == advertSearch.Keyword || c.AdvertDetails == advertSearch.Keyword && advertSearch.Keyword != null)
+                        where (c.ProvinceId == advertSearch.ProvinceId) || (c.CityId == advertSearch.CityId && advertSearch.CityId != null)
+                        || (c.Price >= advertSearch.MinPrice && c.Price <= advertSearch.MaxPrice && advertSearch.MinPrice != null && advertSearch.MaxPrice != null)
+                        || (c.AdvertHead == advertSearch.Keyword || c.AdvertDetails == advertSearch.Keyword && advertSearch.Keyword != "")
                         select c).ToList();
             return adverts;
         }

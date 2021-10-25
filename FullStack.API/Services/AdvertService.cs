@@ -112,7 +112,8 @@ namespace FullStack.API.Services
         public IEnumerable<AdvertModel> SearchAdverts(AdvertSearchModel advertSearchModel)
         {
             var searchedAdverts = _repo.SearchAdverts(MapAdvertSearchModel(advertSearchModel));
-            return searchedAdverts.Select(u => MapAdvertModel(u));
+            List<Advert> sortedSearchedAdverts = searchedAdverts.OrderByDescending(o => o.Price).ToList();
+            return sortedSearchedAdverts.Select(u => MapAdvertModel(u));
         }
 
 
